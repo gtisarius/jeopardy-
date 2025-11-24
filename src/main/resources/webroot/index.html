@@ -3,10 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Jeopardy</title>
 </head>
 <body>
-<h1>Hello, World!</h1>
-<p>This is my first HTML page.</p>
+    <h1>Jeopardy</h1>
+    <div class="main">
+        <div class="gameboard">
+            <p>INSERT GAME CONTENT HERE</p>
+        </div>
+        <div class="menu">
+            <h2>Welcome to Jeopardy!</h2>
+            <p><b>Please fill out the following form</b></p>
+            <form>
+                <label for="gameboardLength">Length: </label>
+                <input id="gameboardLength" type="number" min="1" max="10" value="6">
+                <label for="gameboardWidth">Width: </label>
+                <input id="gameboardWidth" type="number" min="1" max="10" value="5"><br/><br/>
+                <label for="cashIncrements">Lowest cash value: $</label>
+                <input id="cashIncrements" type="number" value="200"><br/><br/>
+                <button type="button" id="setValuesBtn">Create Gameboard!</button>
+
+            </form>
+        </div>
+    </div>
 </body>
 </html>

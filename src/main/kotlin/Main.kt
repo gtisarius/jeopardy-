@@ -11,7 +11,7 @@ import io.ktor.server.routing.routing
 import java.io.File
 
 fun main() {
-    embeddedServer(Netty, port = 8080) {
+    embeddedServer(Netty, port = 12345) {
         routing {
             staticFiles("/", File("src/main/resources/webroot")) {
                 default("index.html")

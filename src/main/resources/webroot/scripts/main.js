@@ -181,6 +181,16 @@ function fetchCategories(questionsPool, rows) {
     return pool.slice(0, n);
 }
 
+function getQuestions(category, difficulty) {
+    let eligibleQuestions = [];
+    for (let i = 0; i < category.questions.length; i++) {
+        if (category.questions[i].difficulty == difficulty) {
+            eligibleQuestions.push(category.questions[i])
+        }
+    }
+    
+}
+
 function generateBoard(rows, columns, increment, questionsArr) {
     const table = document.createElement("table");
     let money = 0; // Changed from var to let
@@ -218,7 +228,11 @@ function generateBoard(rows, columns, increment, questionsArr) {
             question.classList.add("questionBox");
             question.href = "#";
             question.textContent = money;
+            if (Math.floor(rows / 3) >= 1) {
+                question.
+            }
             cell.appendChild(question);
+            
         }
     } 
     

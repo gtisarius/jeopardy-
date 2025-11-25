@@ -198,7 +198,6 @@ function generateBoard(rows, columns, increment, questionsArr) {
     const headRow = table.insertRow();
     for (let j = 0; j < columns; j++) {
         const th = document.createElement('th');
-      // choose a valid random index inside questionsArr
         if (!Array.isArray(questionsArr) || questionsArr.length === 0) {
         // defensive fallback: show empty header if something is wrong
             th.textContent = "";

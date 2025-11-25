@@ -1,0 +1,22 @@
+/* ...existing code... */
+#gameboard table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* keeps cells equal width when you use fixed column counts */
+}
+
+#gameboard th,
+#gameboard td {
+    border: 1px solid rgba(0,0,0,0.12);
+    padding: 0.5rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* price cells */
+#gameboard td.price {
+    font-weight: 700;
+    background: var(--jb-bg, #0366d6);
+    color: var(--jb-fg, #fff);
+    cursor: pointer;
+}

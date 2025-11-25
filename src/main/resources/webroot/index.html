@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeopardy</title>
+    <script src="./scripts/main.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
     <h1>Jeopardy</h1>
     <div class="main">
-        <div class="gameboard">
+        <div id="gameboard">
             <p>INSERT GAME CONTENT HERE</p>
         </div>
-        <div class="menu">
+        <div id="menu">
             <h2>Welcome to Jeopardy!</h2>
             <p><b>Please fill out the following form</b></p>
             <form>
@@ -21,8 +23,8 @@
                 <input id="gameboardWidth" type="number" min="1" max="10" value="5"><br/><br/>
                 <label for="cashIncrements">Lowest cash value: $</label>
                 <input id="cashIncrements" type="number" value="200"><br/><br/>
-                <button type="button" id="setValuesBtn">Create Gameboard!</button>
 
+                <button type="button" id="setValuesBtn" onclick="startGame(document.getElementById('gameboardLength').value, document.getElementById('gameboardWidth').value, parseInt(document.getElementById('cashIncrements').value))">Create Gameboard!</button>
             </form>
         </div>
     </div>

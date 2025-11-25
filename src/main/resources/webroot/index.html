@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy</title>
+    <title>Jeopardy!</title>
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/menu.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="./css/main.css">
 </head>
-<body>
-    <h1>Jeopardy</h1>
+<!-- <body>
+    <h1>Jeopardy!</h1>
     <div class="main">
         <div id="gameboard">
             <p>INSERT GAME CONTENT HERE</p>
@@ -26,6 +28,36 @@
 
                 <button type="button" id="setValuesBtn" onclick="startGame(document.getElementById('gameboardLength').value, document.getElementById('gameboardWidth').value, parseInt(document.getElementById('cashIncrements').value))">Create Gameboard!</button>
             </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body> -->
+<body>
+    <div class="container">
+        <div class="row" id="header">
+            <h1>Jeopardy!</h1>
+            <h5>The state of my grade if isn't liked.</h5>
+        </div>
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6" id="menu">
+                <h3>Welcome to Jeopardy!</h3>
+                <p><b>Please fill out the following form</b></p>
+                <form method="post" action="/api/start_game">
+                    <label for="gameboardCategories">Categories: </label>
+                    <input id="gameboardCategories" name="categories" type="number" min="1" max="10" value="6"><br/><br/>
+                    
+                    <label for="playerInput">Please enter players: </label>
+                    <div id="playerInput">
+                        <button type="button" id="btn_addPlayers" onclick="addPlayer()">Add player</button>
+                        <button type="button" id="btn_removePlayers" onclick="removePlayer()">Remove player</button><br/><br/>
+                        <input type="text" class="playernames" name="player1" value="Player 1"><br/>
+                    </div><br/>
+                    
+                    <button type="submit" id="setValuesBtn">Create Gameboard!</button><br/><br/>
+                </form>
+            </div>
+            <div class="col-3"></div>
         </div>
     </div>
 </body>

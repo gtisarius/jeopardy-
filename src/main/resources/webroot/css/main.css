@@ -1,8 +1,8 @@
-/* ...existing code... */
+/* ...existing code...
 #gameboard table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* keeps cells equal width when you use fixed column counts */
+    table-layout: fixed; /* keeps cells equal width when you use fixed column counts 
 }
 
 #gameboard th,
@@ -13,10 +13,22 @@
     vertical-align: middle;
 }
 
-/* price cells */
 #gameboard td.price {
     font-weight: 700;
     background: var(--jb-bg, #0366d6);
     color: var(--jb-fg, #fff);
     cursor: pointer;
+} */
+
+body {
+    background-color: #2226a6;
+    text-align: center;
+}
+
+.container {
+    background-color: white;
+}
+
+#header {
+    background-color: #980db7;
 }

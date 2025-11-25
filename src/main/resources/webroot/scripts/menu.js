@@ -42,7 +42,7 @@ function removePlayer() {
             playerInput.removeChild(last);
         }
     } else {
-        window.alert("You cannot remove Player 1!")
+        window.alert("You cannot remove Players 1 and 2!")
     }
 }
 

@@ -1,34 +1,110 @@
-/* ...existing code...
-#gameboard table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed; /* keeps cells equal width when you use fixed column counts 
+:root{
+    --bg-1: linear-gradient(120deg,#0f172a 0%,#0f1a6d 40%,#3b0d4c 100%);
+    --card-bg: #0f172a88;
+    --panel: rgba(255,255,255,0.06);
+    --accent: #7c3aed;
+    --accent-2: #06b6d4;
+    --muted: rgba(255,255,255,0.75);
+    --surface: #0b1020;
+    --glass: rgba(255,255,255,0.06);
+    --success: #16a34a;
 }
 
-#gameboard th,
-#gameboard td {
-    border: 1px solid rgba(0,0,0,0.12);
-    padding: 0.5rem;
-    text-align: center;
-    vertical-align: middle;
+/* global */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    color:var(--muted);
+    background:var(--bg-1);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
 }
 
-#gameboard td.price {
-    font-weight: 700;
-    background: var(--jb-bg, #0366d6);
-    color: var(--jb-fg, #fff);
-    cursor: pointer;
-} */
-
-body {
-    background-color: #2226a6;
-    text-align: center;
+.container{
+    max-width:1180px;
+    margin:1.2rem auto 3rem;
+    padding:1.25rem;
 }
 
-.container {
-    background-color: white;
+/* header */
+#header{
+    background:linear-gradient(90deg,var(--accent) 0%, #5b21b6 30% );
+    color:white;
+    padding:1.25rem 1rem;
+    border-radius:10px;
+    display:flex;
+    gap:1rem;
+    align-items:center;
+    justify-content:space-between;
+}
+#header h1{font-size:1.6rem;margin:0}
+#header h5{font-weight:400;opacity:.9;margin:0}
+
+/* layout */
+.row{display:flex;gap:1rem}
+.col-3{flex:0 0 22%;}
+.col-6{flex:0 0 56%;}
+
+/* menu card */
+#menu{
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border-radius:10px;
+    padding:1rem 1.25rem;
+    box-shadow: 0 8px 30px rgba(2,6,23,.6), inset 0 1px 0 rgba(255,255,255,.02);
 }
 
-#header {
-    background-color: #980db7;
+#menu h3{margin-top:0;color:white}
+#menu p{color:rgba(255,255,255,.8)}
+
+label{display:block;text-align:left;color:rgba(255,255,255,0.9);margin:0.35rem 0}
+input[type="number"], input[type="text"]{
+    width:100%;
+    padding:8px 10px;
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.02);
+    color:var(--muted);
 }
+
+button{cursor:pointer;border-radius:6px;padding:.45rem .8rem;border:0}
+
+#btn_addPlayers, #btn_removePlayers{background:rgba(255,255,255,0.06); color:var(--muted); margin-right:0.25rem}
+
+#setValuesBtn{display:inline-block;margin-top:10px;background:var(--accent);color:#fff;font-weight:600}
+
+/* players list spacing */
+#playerInput input.playernames{margin-bottom:0.35rem}
+
+/* gameboard */
+#gameboard{margin-top:1.25rem}
+#gameboard table{width:100%;border-collapse:collapse;table-layout:fixed;border-radius:8px;overflow:hidden;background:linear-gradient(180deg,#08102522,#08102511)}
+#gameboard th{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:.8rem;font-weight:700;text-transform:uppercase;font-size:0.85rem}
+#gameboard td{border:1px solid rgba(255,255,255,0.06);padding:0}
+
+/* question square */
+.questionBox{display:block;padding:1.1rem 0;font-weight:800;color:white;text-decoration:none;background:linear-gradient(180deg,#0ea5a7,#0284c7);height:80px; width:100%;box-shadow:0 6px 18px rgba(0,0,0,0.35);transition:transform .12s ease,opacity .12s ease;align-items:center;justify-content:center;display:flex}
+.questionBox:hover{transform:translateY(-4px)}
+.questionBox.used{opacity:.45;filter:grayscale(.6);text-decoration:line-through}
+.questionBox.disabled{background:linear-gradient(180deg,#303030,#202020);color:#ddd;opacity:.6;cursor:not-allowed}
+.questionBox.empty{background:transparent;color:rgba(255,255,255,0.5);font-weight:600}
+
+/* modal (small but nice) */
+#question-modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.7);z-index:9999;padding:1rem}
+#question-modal > div{background:linear-gradient(180deg,#061a3b,#08223d);color:var(--muted);border-radius:12px;padding:18px;max-width:720px;width:100%;box-shadow:0 18px 60px rgba(1,8,21,.75)}
+#question-modal h2{margin:0 0 0.5rem;color:white}
+#question-modal p{margin:0}
+#question-modal #question-modal-answer{color:var(--success);font-weight:700}
+#question-modal button{background:#fff;color:#0b1020;border-radius:6px;padding:.45rem .75rem;border:0}
+#question-modal .btn-ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.06)}
+
+@media (max-width:800px){
+    .row{flex-direction:column}
+    .col-3,.col-6{flex:1}
+    #header{flex-direction:column;align-items:flex-start}
+    .questionBox{height:68px}
+}
+
+/* small niceties for contrast */
+a{color:inherit}

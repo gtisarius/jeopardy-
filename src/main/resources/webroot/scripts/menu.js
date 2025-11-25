@@ -48,7 +48,7 @@ function removePlayer() {
 
 
 // Handle form submission
-document.getElementById('gameForm').addEventListener('submit', function(e) {
+document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
     
     const categories = parseInt(document.getElementById('gameboardCategories').value);

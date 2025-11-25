@@ -2,7 +2,7 @@
 // 1) Open the page and use the Add player button — new inputs will be created with names player2, player3, etc.
 // 2) Submit the form — the POST body will include categories and every playerN input's value.
 // 3) Remove player will remove the last added input (and its line-break) so it won't be sent.
-let playerCount = 1;
+let playerCount = 2;
 
 function addPlayer() {
     const playerInput = document.getElementById("playerInput");
@@ -26,7 +26,7 @@ function addPlayer() {
 
 function removePlayer() {
     const playerInput = document.getElementById("playerInput");
-    if (playerCount > 1) {
+    if (playerCount > 2) {
         playerCount -= 1;
         // remove the last element(s) that belong to the last player input
         let last = playerInput.lastElementChild;
@@ -45,3 +45,43 @@ function removePlayer() {
         window.alert("You cannot remove Player 1!")
     }
 }
+
+
+// Handle form submission
+document.getElementById('gameForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const categories = parseInt(document.getElementById('gameboardCategories').value);
+    const playerInputs = document.querySelectorAll('.playernames');
+    const players = Array.from(playerInputs).map(input => input.value);
+    
+    const gameData = {
+        categories: categories,
+        players: players
+    };
+    
+    console.log('Sending JSON:', gameData);
+    
+    fetch('/api/start_game', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(gameData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Success:', data);
+        // Start your game with the response
+        startGame(5, categories, 200);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to start game');
+    });
+});

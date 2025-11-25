@@ -1,7 +1,7 @@
 import kotlin.time.Clock.System
 import kotlin.time.ExperimentalTime
 
-data class Category(val name: String, val questions: Set<Question>) {
+data class Category(val name: String, val questions: List<Question>) {
     init {
         if (questions.size < 5) {
             throw IllegalArgumentException("Not enough questions!")
@@ -21,6 +21,11 @@ enum class Difficulty {
 }
 
 data class GameInstance(val players: List<String>, val categories: Set<Category>) {
+    init {
+        if (players.size < 2 || players.size > categories.size * 5) {
+            throw IllegalArgumentException("bad number of players")
+        }
+    }
     @OptIn(ExperimentalTime::class)
     val gameId: String = System.now().toString()
 }

@@ -78,7 +78,7 @@ document.getElementById('gameForm').addEventListener('submit', function(e) {
     .then(data => {
         console.log('Success:', data);
         // Start your game with the response
-        startGame(5, categories, 200);
+        //startGame(5, categories, 200);
     })
     .catch(error => {
         console.error('Error:', error);

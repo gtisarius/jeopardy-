@@ -13,6 +13,9 @@ fun main() {
     embeddedServer(Netty, port = 12345, module = Application::module).start(wait = true)
 }
 
+val categories = mutableSetOf<Category>()
+val games = mutableListOf<GameInstance>()
+
 fun Application.module() {
     routing {
         staticFiles("/", File("src/main/resources/webroot")) {
@@ -22,8 +25,12 @@ fun Application.module() {
             post("/start_game") {
                 val gson = Gson()
                 val postData = call.receiveText()
-//                val gameStartRequest = gson.fromJson(postData, GameStartRequest::class.java)
-                val gameStartResponse = GameStartResponse("testID", setOf("Math"))
+                val gameStartRequest = gson.fromJson(postData, GameStartRequest::class.java)
+                val categoryCount = gameStartRequest.categoryCount?:5
+                val categoryNames = categories.shuffled().take(categoryCount).toSet()
+                val game = GameInstance(gameStartRequest.players, categoryNames)
+                games.add(game)
+                val gameStartResponse = GameStartResponse(game.gameId, game.categories.map { it.name }.toSet())
                 val responseMessage = gson.toJson(gameStartResponse)
                 call.respondText(responseMessage, ContentType.Application.Json, HttpStatusCode.OK)
             }

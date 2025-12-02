@@ -11,7 +11,10 @@ import com.google.gson.JsonSyntaxException
 import io.ktor.http.ContentType
 import java.io.File
 import java.lang.IllegalArgumentException
+import java.nio.file.Files
 import kotlin.reflect.KClass
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 fun main() {
     embeddedServer(Netty, port = 12345, module = Application::module).start(wait = true)
@@ -77,6 +80,7 @@ val categories = mutableSetOf(
 val games = mutableListOf<GameInstance>()
 val gson = Gson()
 
+@OptIn(ExperimentalTime::class)
 fun Application.module() {
     routing {
         staticFiles("/", File("src/main/resources/webroot")) {
@@ -144,6 +148,38 @@ fun Application.module() {
                 } catch (e: Exception) {
                     call.respondError(e.message ?: "Error uploading dataset")
                     return@post
+                }
+            }
+            post("/export_game") {
+                val exportGameRequest = call.parseAs(ExportGameRequest::class)
+                val format = exportGameRequest.format
+                val delimiter = when(format) {
+                    "csv" -> ","
+                    "tsv" -> "\t"
+                    else -> throw kotlin.IllegalArgumentException("Unsupported format")
+                }
+                val game = getGameById(exportGameRequest.gameId, call)
+                if (game != null) {
+                    if (!game.gameOver()) {
+                        call.respondError("Game is still running")
+                    } else {
+                        val output = StringBuilder()
+                        game.questionsToPoints.forEach { (category, questionToPointsMap) ->
+                            questionToPointsMap.forEach { (pointValue, question) ->
+                                output.append(category.name)
+                                output.append(delimiter)
+                                output.append(question.text)
+                                output.append(delimiter)
+                                output.append(question.answer)
+                                output.append(delimiter)
+                                output.append(pointValue)
+                                output.append(delimiter)
+                            }
+                        }
+                        val path = "src/main/resources/webroot/downloads/" + Clock.System.now()
+                        File(path).writeText(output.toString())
+                        call.respondJson(ExportGameResponse(path))
+                    }
                 }
             }
         }

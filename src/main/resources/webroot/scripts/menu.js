@@ -47,41 +47,50 @@ function removePlayer() {
     }
 }
 
+function hookFormSubmission(formId, endpoint, dataSupplier, dataConsumer) {
+    document.getElementById(formId).addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        gameData = dataSupplier()
+        console.log('Sending JSON:', gameData);
+        
+        fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(gameData)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            menu.style.display = "none";
+            dataConsumer(data)
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to start game');
+        });
+    });
+}
 
-// Handle form submission
-document.getElementById('gameForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
+hookFormSubmission('gameForm', '/api/start_game', function() {
     const categories = parseInt(document.getElementById('gameboardCategories').value);
     const playerInputs = document.querySelectorAll('.playernames');
     const players = Array.from(playerInputs).map(input => input.value);
-    
+        
     const gameData = {
         categories: categories,
         players: players
     };
     
-    console.log('Sending JSON:', gameData);
-    
-    fetch('/api/start_game', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(gameData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Success:', data);
-        menu.style.display = "none";
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to start game');
-    });
-});
+    return gameData
+}, function(data) {
+    console.log(data);
+})
+// Handle form submission
+

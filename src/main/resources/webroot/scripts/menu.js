@@ -47,6 +47,76 @@ function removePlayer() {
     }
 }
 
+function generateBoard(rows, columns) {
+    const board = document.getElementById("gameboard");
+    if (!board) return null;
+
+    // clear any existing board
+    board.innerHTML = '';
+
+    // defensive checks & normalize inputs
+    rows = Math.max(0, parseInt(rows, 10) || 0);
+    columns = Math.max(0, parseInt(columns, 10) || 0);
+
+    const table = document.createElement("table");
+    table.classList.add('gameboard-table');
+
+    // local helper so we don't rely on global getRandomInt
+    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // make a shallow copy of questionsArr so we do not permanently mutate the global
+    const available = Array.isArray(questionsArr) ? questionsArr.slice() : [];
+
+    // HEADERS: pick a unique random category for each column (if available)
+    const headRow = table.insertRow();
+    for (let j = 0; j < columns; j++) {
+        const th = document.createElement('th');
+
+        if (available.length === 0) {
+            th.textContent = "";
+            headRow.appendChild(th);
+            continue;
+        }
+
+        const idx = getRandomInt(0, available.length - 1);
+        const category = available[idx];
+        th.textContent = category && category.category ? category.category : "";
+        // store the category object on the header for future reference
+        th.dataset.categoryIndex = idx;
+        available.splice(idx, 1); // ensure headers are unique
+        headRow.appendChild(th);
+    }
+
+    // CELLS: create rows of values (e.g., 200, 400, 600...) and fill columns
+    const baseValue = 200; // standard Jeopardy-like increments
+    for (let i = 0; i < rows; i++) {
+        const tr = table.insertRow();
+        const value = baseValue * (i + 1);
+
+        for (let j = 0; j < columns; j++) {
+            const td = document.createElement('td');
+            td.classList.add('clue-cell');
+            td.dataset.row = i;
+            td.dataset.col = j;
+            td.dataset.value = String(value);
+            td.textContent = `$${value}`;
+
+            // simple click behavior: mark used and remove text to indicate claimed clue
+            td.addEventListener('click', function () {
+                if (this.classList.contains('used')) return;
+                this.classList.add('used');
+                // you might replace this with logic to show the question / open modal
+                this.textContent = '';
+            });
+
+            tr.appendChild(td);
+        }
+    }
+
+    board.appendChild(table);
+    return table;
+}
+
 function hookFormSubmission(formId, endpoint, dataSupplier, dataConsumer) {
     document.getElementById(formId).addEventListener('submit', function(e) {
         e.preventDefault();
@@ -91,6 +161,7 @@ hookFormSubmission('gameForm', '/api/start_game', function() {
 }, function(data) {
     menu.style.display = "none";
     console.log(data);
+    generateBoard(5, categories);
 });
 
 

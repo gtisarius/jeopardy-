@@ -13,5 +13,8 @@ data class WireQuestion(val text: String, val difficulty: String, val answer: St
 data class UploadDatasetRequest(val categoryName: String, val questions: List<WireQuestion>)
 data class UploadDatasetResponse(val success: Boolean)
 
+data class ExportGameRequest(val gameId: String, val format: String)
+data class ExportGameResponse(val downloadLink: String)
+
 data class GenerateQuestionSetRequest(val categoryName: String, val categoryType: String, val count: Int)
 data class GenerateQuestionSetResponse(val status: String)

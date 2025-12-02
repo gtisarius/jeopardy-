@@ -1,3 +1,4 @@
+import java.lang.IllegalStateException
 import kotlin.time.Clock.System
 import kotlin.time.ExperimentalTime
 
@@ -25,12 +26,17 @@ data class GameInstance(val players: List<String>, val categories: Set<Category>
     val questionsToPoints: Map<Category, Map<Int, Question>>
     val answeredQuestions = mutableListOf<Question>()
     var currentQuestion: Question? = null
+    var currentPoints: Int = 0
+    val playerOrder = players.toMutableList()
+    val scores = players.associateWith { 0 }.toMutableMap()
+    val totalQuestions: Int
 
     init {
         if (players.size < 2 || players.size > categories.size * 5) {
             throw IllegalArgumentException("Bad number of players")
         }
         val newMap = mutableMapOf<Category, Map<Int, Question>>()
+        var questionCount = 0
         categories.forEach { category ->
             val questionsToPoints = mutableMapOf<Int, Question>()
             val questions = category.questions
@@ -45,7 +51,9 @@ data class GameInstance(val players: List<String>, val categories: Set<Category>
             val q500 = questions.filter { it.difficulty == Difficulty.HARD }.shuffled().first()
             questionsToPoints[500] = q500
             newMap[category] = questionsToPoints
+            questionCount += 5
         }
+        totalQuestions = questionCount
         this.questionsToPoints = newMap
     }
 
@@ -64,5 +72,32 @@ data class GameInstance(val players: List<String>, val categories: Set<Category>
             throw IllegalArgumentException("Question already answered")
         }
         currentQuestion = selectedQuestion
+        currentPoints = pointValue
     }
+
+    fun currentPlayer() : String {
+        return playerOrder[0]
+    }
+
+    fun submitAnswer(answer: String) : SubmitAnswerResponse {
+        currentQuestion?.let {
+            val correctAnswer = it.answer
+            val correct = correctAnswer == answer
+            val scoreDelta = if (correct) {currentPoints} else {-currentPoints}
+            val currentPlayer = currentPlayer()
+            val currentScore = scores[currentPlayer]
+            val newScore = currentScore!! + scoreDelta
+            scores[currentPlayer] = newScore
+            answeredQuestions.add(it)
+            val gameOver = gameOver()
+            playerOrder.remove(currentPlayer)
+            playerOrder.add(currentPlayer)
+            val nextPlayer = currentPlayer()
+            currentQuestion = null
+            return SubmitAnswerResponse(correct, correctAnswer, newScore, nextPlayer, gameOver)
+        }
+        throw IllegalStateException("No question loaded")
+    }
+
+    fun gameOver(): Boolean = answeredQuestions.size == totalQuestions
 }

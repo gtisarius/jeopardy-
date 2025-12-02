@@ -98,17 +98,52 @@ fun Application.module() {
                     return@post
                 }
                 games.add(game)
-                val gameStartResponse = GameStartResponse(game.gameId, game.categories.map { it.name }.toSet())
+                val gameStartResponse = GameStartResponse(game.gameId, game.categories.map { it.name }.toSet(), game.currentPlayer())
                 call.respondJson(gameStartResponse)
             }
             post("/choose_question") {
                 val chooseQuestionRequest = call.parseAs(ChooseQuestionRequest::class)
                 val game = getGameById(chooseQuestionRequest.gameId, call)
                 if (game != null) {
-                    game.fetchQuestion(chooseQuestionRequest.category, chooseQuestionRequest.pointValue)
+                    try {
+                        game.fetchQuestion(chooseQuestionRequest.category, chooseQuestionRequest.pointValue)
+                    } catch (e: Exception) {
+                        call.respondError(e.message ?: "Error fetching question")
+                        return@post
+                    }
                     val question = game.currentQuestion!!
                     val response = ChooseQuestionResponse(question.text, chooseQuestionRequest.pointValue)
                     call.respondJson(response)
+                }
+            }
+            post("/submit_answer") {
+                val submitAnswerRequest = call.parseAs(SubmitAnswerRequest::class)
+                val game = getGameById(submitAnswerRequest.gameId, call)
+                if (game != null) {
+                    val response = try {
+                        game.submitAnswer(submitAnswerRequest.answer)
+                    } catch (e: Exception) {
+                        call.respondError(e.message ?: "Error submitting answer")
+                        return@post
+                    }
+                    call.respondJson(response)
+                }
+            }
+            post("/upload_dataset") {
+                val uploadDatasetRequest = call.parseAs(UploadDatasetRequest::class)
+                try {
+                    categories.add(Category(uploadDatasetRequest.categoryName, uploadDatasetRequest.questions.map {
+                        Question(it.text, when(it.difficulty) {
+                            "easy" -> Difficulty.EASY
+                            "medium" -> Difficulty.EASY
+                            "hard" -> Difficulty.HARD
+                            else -> throw IllegalArgumentException("Invalid difficulty")
+                        }, it.answer)
+                    }))
+                    call.respondJson(UploadDatasetResponse(true))
+                } catch (e: Exception) {
+                    call.respondError(e.message ?: "Error uploading dataset")
+                    return@post
                 }
             }
         }

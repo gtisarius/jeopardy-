@@ -68,7 +68,6 @@ function hookFormSubmission(formId, endpoint, dataSupplier, dataConsumer) {
             return response.json();
         })
         .then(data => {
-            menu.style.display = "none";
             dataConsumer(data)
         })
         .catch(error => {
@@ -90,7 +89,10 @@ hookFormSubmission('gameForm', '/api/start_game', function() {
     
     return gameData
 }, function(data) {
+    menu.style.display = "none";
     console.log(data);
-})
+});
+
+
 // Handle form submission
 

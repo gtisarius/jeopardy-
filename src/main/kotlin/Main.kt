@@ -108,7 +108,6 @@ fun Application.module() {
             post("/start_game") {
                 val gson = Gson()
                 val postData = call.receiveText()
-                println("Game start request: $postData")
                 val gameStartRequest = gson.fromJson(postData, GameStartRequest::class.java)
                 val categoryCount = gameStartRequest.categoryCount?:5
                 val categoryNames = categories.shuffled().take(categoryCount).toSet()
@@ -117,6 +116,9 @@ fun Application.module() {
                 val gameStartResponse = GameStartResponse(game.gameId, game.categories.map { it.name }.toSet())
                 val responseMessage = gson.toJson(gameStartResponse)
                 call.respondText(responseMessage, ContentType.Application.Json, HttpStatusCode.OK)
+            }
+            post("/choose_question") {
+
             }
         }
     }

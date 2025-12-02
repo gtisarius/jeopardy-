@@ -2,6 +2,7 @@
 // 1) Open the page and use the Add player button — new inputs will be created with names player2, player3, etc.
 // 2) Submit the form — the POST body will include categories and every playerN input's value.
 // 3) Remove player will remove the last added input (and its line-break) so it won't be sent.
+const menu = document.getElementById("menu");
 let playerCount = 2;
 
 function addPlayer() {
@@ -77,8 +78,7 @@ document.getElementById('gameForm').addEventListener('submit', function(e) {
     })
     .then(data => {
         console.log('Success:', data);
-        // Start your game with the response
-        //startGame(5, categories, 200);
+        menu.style.display = "none";
     })
     .catch(error => {
         console.error('Error:', error);
